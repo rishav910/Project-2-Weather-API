@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Weather</title>
+	<link rel="stylesheet" type="text/css" href="weather.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+	<div id="site-content">
+		<header class="head">
+			<p class="xy">Temperature Report</p>
+		</header>
+		<p id="output">Search</p>
+		<div class="search-div">
+			<input id="city" placeholder="City name">
+			<button onclick="show_temp()" class="submit">Submit</button>
+		</div>
+
+	<script type="text/javascript">
+		function show_temp(){
+			document.getElementById("output").style.color="blue";
+			document.getElementById("output").style.fontSize="30px";
+
+			city=document.getElementById("city").value;
+			httpRequest=new XMLHttpRequest();
+			url="https://api.weatherbit.io/v2.0/current?city="+city+"&key=bbe6c610f1454b16a58f507d63c2dd19&include=minutely";
+			httpRequest.open("GET",url);
+			httpRequest.send();
+
+			httpRequest.onreadystatechange=function(){
+				if(this.readyState==4 && this.status==200){
+					user_data=JSON.parse(this.responseText);
+					document.getElementById("output").innerHTML=user_data.data[0].temp+"&deg; C";
+					if(user_data.data[0].temp>=30)
+						document.getElementById("site-content").style.backgroundImage="url('greater30.jpg')";
+					else if(user_data.data[0].temp>20)
+						document.getElementById("site-content").style.backgroundImage="url('greater20.jpg')";
+					else if(user_data.data[0].temp>0)
+						document.getElementById("site-content").style.backgroundImage="url('greater0.jpg')";
+					else if(user_data.data[0].temp<=0){
+						document.getElementById("site-content").style.backgroundImage="url('less01.jpg')";
+						document.getElementById("output").style.color="white";
+					}
+				}
+			}
+		}
+	</script>
+		<footer>
+			This is a Project made by Rishav Saha.
+		</footer>
+	</div>
+</body>
+</html>
